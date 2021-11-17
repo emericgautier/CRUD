@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
+const Product = require('./models/product');
+
 const app = express();
 
 mongoose.connect('mongodb+srv://Emeric:ygNtmCA9z2qiTRIG@cluster0.gp1ym.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
@@ -20,10 +22,13 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 
 app.post('/api/products', (req, res, next) => {
-    console.log(req.body);
-    res.status(201).json({
-      message: 'Objet créé !'
+    delete req.body._id;
+    const product = new Product({
+      ...req.body
     });
+    product.save()
+      .then(() => res.status(201).json({product}))
+      .catch(error => res.status(400).json({ error }));
   });
 
 module.exports = app;
