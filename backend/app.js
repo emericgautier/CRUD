@@ -49,4 +49,10 @@ mongoose.connect('mongodb+srv://Emeric:ygNtmCA9z2qiTRIG@cluster0.gp1ym.mongodb.n
           .catch(error => res.status(400).json({ error }));
     });
     
-    module.exports = app;
+    app.delete('/api/products/:id', (req, res, next) => {
+        Product.deleteOne({ _id: req.params.id })
+          .then(() => res.status(200).json({ message: 'Objet supprimé !'}))
+          .catch(error => res.status(400).json({ error }));
+    });
+
+module.exports = app;
